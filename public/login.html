@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login?</title>
+    <style>
+      #center{
+        margin: 0 auto;
+        width: 50%;
+        border: 3px solid tomato;
+        padding: 20px;
+        
+    }
+    #form-data{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding:25px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        text-transform: initial;
+    }
+    #form-data button{
+        margin: 0 auto;
+        padding : 10px;
+        border-radius: 10px;
+        background: -webkit-gradient(linear, left top, left bottom, from(pink), to(#8c00ff));
+        color: white;
+        font-weight: inherit;
+        font-size: larger;
+        border-style: none;
+        width: 150px;
+        height:50px;
+    }
+    #form-data input{
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+    </style>
+</head>
+<body style="background-image:linear-gradient(to bottom,#66cc99,#99cc99 ) ;">
+    <div id = 'center'>
+        <form id='form-data' action="/findData" method="POST">
+            <label for='Email'>Email*</label>
+            <input type = 'email' name = 'email' placeholder = 'abc@gmail.com' required>
+            <label for ='pwrd'>Pasword*</label>
+            <input type = "password" name="pwd" placeholder="bob@134" required>
+            <button type = 'submit' onclick="passwordMatch()">Login</button>
+        </form>
+        </div>
+         <div id = 'result'></div>
+        <script>
+            function passwordMatch(){
+                var email = document.getElementById('email').value;
+                var pwd = document.getElementById('pwd').value;
+                var data = {
+                    email: email,
+                    pwd: pwd
+                }
+                fetch('/findData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then((response) => {
+    if (response.status === 200) {
+        // Login was successful, handle it as needed.
+        // Redirect to a new page, display a success message, etc.
+    } else if (response.status === 401) {
+        // Login failed, display an error message to the user.
+        alert('Login failed. Wrong password or email.');
+    } else {
+        // Handle other status codes as needed.
+        console.error('Unexpected status code:', response.status);
+    }
+})
+.catch((error) => {
+    console.error('Error:', error);
+});
+            }
+        </script>
+</body>
+</html>

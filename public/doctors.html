@@ -1,0 +1,155 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel = "stylesheet" href = "style.css">
+    <title>Doctor Appointment Booking</title>
+</head>
+<body>
+    <header>
+        <h1>Doctor Appointment Booking</h1>
+    </header>
+
+    <main>
+        <!-- Select a doctor -->
+        <section id="doctor-selection">
+            <label for="doctor">Select a Doctor:</label>
+            <select id="doctor"></select>
+        </section>
+
+        <!-- Doctor Listings -->
+        <section id="doctor-list"></section>
+
+        <!-- Appointment Form (hidden by default) -->
+        <section id="appointment-form" class="hidden">
+            <h2>Appointment Details</h2>
+            <form id="booking-form">
+                <input type="hidden" id="doctorName" name="doctorName" value="">
+                <label for="date">Date:</label>
+                <input type="date" id="date" required><br>
+                <label for="time">Time:</label>
+                <input type="time" id="time" required><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required><br>
+                <button type="submit">Book Appointment</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Add any footer content here -->
+    </footer>
+
+    <script>
+        // Sample doctor data
+        const doctorsData = [
+            {
+                id: 1,
+                name: "Dr. james",
+                specialization: "Therapist",
+                experience: "10 years",
+                fees: "Rs 1000/hr",
+                details: "Dr. Tanisha is a therapist with expertise in relationship counseling. She can entertain you and if you feel sad, she won't let you feel lonely. She can give you the happiness you are searching for. She will make you feel complete and can have various roles in your life.",
+                image: "dp3.jpeg"
+            },
+            // Add more doctor objects as needed
+        ];
+
+        // Function to populate doctor listings
+        function populateDoctorList() {
+            const doctorList = document.getElementById("doctor-list");
+            const doctorSelect = document.getElementById("doctor");
+
+            doctorsData.forEach((doctor) => {
+                const doctorOption = document.createElement("option");
+                doctorOption.value = doctor.id;
+                doctorOption.textContent = doctor.name;
+                doctorSelect.appendChild(doctorOption);
+
+                const doctorCard = document.createElement("div");
+                doctorCard.classList.add("doctor-card");
+
+                const doctorImage = document.createElement("img");
+                doctorImage.src = doctor.image;
+                doctorImage.alt = doctor.name;
+
+                const doctorInfo = document.createElement("div");
+                doctorInfo.classList.add("doctor-info");
+                doctorInfo.innerHTML = `
+                    <h3>${doctor.name}</h3>
+                    <p>${doctor.specialization}</p>
+                    <p>Experience: ${doctor.experience}</p>
+                    <p>Fees: ${doctor.fees}</p>
+                    <p>${doctor.details}</p>
+                    <button onclick="selectDoctor(${doctor.id}, '${doctor.name}')">Select</button>
+                `;
+
+                doctorCard.appendChild(doctorImage);
+                doctorCard.appendChild(doctorInfo);
+                doctorList.appendChild(doctorCard);
+            });
+        }
+
+        // Function to select a doctor and show the appointment form
+        function selectDoctor(doctorId, doctorName) {
+            const doctorSelect = document.getElementById("doctor");
+            doctorSelect.value = doctorId;
+
+            // Set the doctorName field in the form
+            const doctorNameField = document.getElementById("doctorName");
+            doctorNameField.value = doctorName;
+
+            console.log(doctorId, doctorName);
+
+            const appointmentForm = document.getElementById("appointment-form");
+            appointmentForm.classList.remove("hidden");
+        }
+
+        // Function to book an appointment
+        function bookAppointment() {
+            //const doctorId = document.getElementById("doctor").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+            const doctor = document.getElementById("doctor").value;
+            const email = document.getElementById("email").value;
+            // Create an object with the data to send to the server
+            const data = {
+                doctor: doctor,
+                date: date,
+                time: time,
+                email: email
+            };
+
+            // Send a POST request to the server
+            fetch('/appointment', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server (e.g., show a confirmation message)
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+        // Event listener for form submission
+        const bookingForm = document.getElementById("booking-form");
+        bookingForm.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            bookAppointment();
+        });
+
+        // Populate doctor listings when the page loads
+        window.addEventListener("load", () => {
+            populateDoctorList();
+        });
+    </script>
+</body>
+</html>

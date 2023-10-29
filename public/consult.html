@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counseling Services</title>
+</head>
+<body>
+    <header>
+        <h1>Counseling Services</h1>
+    </header>
+    
+         <h2>Book an Appointment</h2>
+        <form id="booking-form" action="/appointment" method="POST">
+            <label for='doctor'>Select a Doctor:</label>
+            <input type ='text' id = "doctor" required>
+            <label for='date'>Select a Date:</label>
+            <input type='date' id="date" required>
+
+            <label for='time'>Select a Time:</label>
+            <input type='time' id="time" required>
+
+            <label for='email'>Enter your Gmail:</label>
+            <input type='text' id="email" required>
+
+            <button type='submit' onclick="getapp()">Book Appointme nt</button>
+        </form>
+
+        <dv id="result"></dv>
+    <script >
+        function getapp(){
+            var doctor = document.getElementById("doctor").value;
+            var date = document.getElementById("date").value;
+            var time = document.getElementById("time").value;
+            var email = document.getElementById("email").value;
+            var data = {
+                doctor: doctor,
+                date: date,
+                time: time,
+                email: email
+            };
+            console.log(data);
+            fetch('/appointment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                const resultDiv = document.getElementById("result");
+                resultDiv.textContent = result.message;
+                window.alert("Appointment booked!");
+            })
+        }
+    </script>
+</body>
+</html>

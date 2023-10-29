@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+    #center{
+        margin: 0 auto;
+        width: 50%;
+        border: 3px solid tomato;
+        padding: 10px;
+        height: 100%;
+    }
+    #form-data{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding:15px;
+    }
+    #form-data input{
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+    #form-data label{
+        width: 50%;
+        padding: 10px;
+    }
+    #form-data button{
+        width: 100px;
+        margin: 0 auto;
+        padding : 10px;
+        border-radius: 10px;
+        background: -webkit-gradient(linear, left top, left bottom, from(pink), to(#8c00ff));
+        color: white;
+        font-weight: inherit;
+        font-size: larger;
+        border-style: none;
+        width: 150px;
+        height:50px;
+    }
+
+    #text{
+        padding:10px;
+        text-align: center;
+    
+    }
+    </style>
+
+</head>
+<body style="background-image:linear-gradient(to bottom,#66cc99,#99cc99 ) ;">
+    <div id = 'center'>
+    <form id='form-data' action="/addData" method="POST">
+        <label for='Name'>Name*</label>
+        <input type = 'text' name = 'name' placeholder = 'BOB' required>
+        <label for='Email'>Email*</label>
+        <input type = 'email' name = 'email' placeholder = 'abc@gmail.com' required>
+        <label for ='pwrd'>Pasword*</label>
+        <input type = "text" name="pwd" placeholder="bob@134" required>
+        <label for = 'contact'>Contact*</label>
+        <input type = 'text' name = 'contact' placeholder = '1234567890' required>
+        <button type = 'submit' onclick="add_data()">Register</button>
+        <div id="text">
+        <p1>or</p1>
+        </div>
+        <button type = 'Login' onClick="window.location.href='login.html'">Login</button>
+    </form>
+    </div>
+    <div id = 'result'></div>
+    <script>
+        function add_data(){
+            var name = document.getElementsByName('name')[0].value;
+            var email = document.getElementsByName('email')[0].value;
+            var contact = document.getElementsByName('contact')[0].value;
+            var pwd = document.getElementsByName('pwd')[0].value;
+            var data = {
+                name : name,
+                email : email,
+                pwd: pwd,
+                contact : contact
+            }
+            console.log(data);
+            fetch('/addData', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                const resultDiv = document.getElementById("result");
+                resultDiv.textContent = result.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.alert(error+":  All the form field are required");
+            });
+        }
+    </script> 
+</body>
+</html>
