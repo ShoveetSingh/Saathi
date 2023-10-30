@@ -1,1 +1,6 @@
+# Ignore .env file
 .env
+
+# Other files/directories you want to ignore (add more as needed)
+node_modules/
+build/
